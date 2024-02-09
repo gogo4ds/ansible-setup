@@ -18,6 +18,9 @@
     - curl
     - software-properties-common
     - gnupg-agent
+    - python3-pip
+    - virtualenv
+    - python3-setuptools
   
 - name: Add an apt signing key for Docker
   apt_key:
