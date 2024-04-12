@@ -14,11 +14,13 @@
   package:
     name: nano
     state: latest
-  
-- name: Install net-tools
-  package:
+
+# Net tools is only available in apt
+- name: Install net-tools using apt
+  apt:
     name: net-tools
     state: latest
+    update_cache: yes
 
 - name: Install telnet
   package:
