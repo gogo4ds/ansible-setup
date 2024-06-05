@@ -6,4 +6,4 @@
     daemon_reload: yes
 
 - name: Run application with docker compose
-  shell: docker compose -f "/home/{{ ansible_user }}/repos/judge-workers-deployment/docker-compose.{{ workers_count }}.yml" up -d
+  shell: docker compose -f "{{ workers_compose_file_path }}" up -d

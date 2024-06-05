@@ -18,6 +18,7 @@
     - utilities
     - zsh
     - docker
+    - ufw
     - checkout_worker_deployment
     - update_worker
     - deploy_worker

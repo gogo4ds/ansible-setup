@@ -12,6 +12,6 @@
     executable: /usr/bin/zsh
 
 - name: Pull newer images
-  shell: docker compose -f "/home/{{ ansible_user }}/repos/judge-workers-deployment/docker-compose.{{ workers_count }}.yml" pull
+  shell: docker compose -f "{{ workers_compose_file_path }}" pull
   args:
     executable: /usr/bin/zsh

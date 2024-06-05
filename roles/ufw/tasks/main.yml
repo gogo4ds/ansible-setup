@@ -1,0 +1,33 @@
+---
+- name: Ensure UFW is installed
+  apt:
+    name: ufw
+    state: present
+
+- name: Enable UFW
+  ufw:
+    state: enabled
+
+- name: Enable docker IPs internally (172.16.0.0)
+  ufw:
+    rule: allow
+    from_ip: 172.16.0.0/16
+
+- name: Enable docker IPs internally (172.17.0.0)
+  ufw:
+    rule: allow
+    from_ip: 172.17.0.0/16
+
+- name: Enable docker IPs internally (172.18.0.0)
+  ufw:
+    rule: allow
+    from_ip: 172.18.0.0/16
+
+- name: Enable docker IPs internally (172.19.0.0)
+  ufw:
+    rule: allow
+    from_ip: 172.19.0.0/16
+
+- name: Reload UFW to apply changes
+  command: ufw reload
+  when: ansible_distribution == 'Ubuntu'
