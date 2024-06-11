@@ -63,3 +63,19 @@
     rule: allow
     port: 9000
     proto: tcp
+
+- name: Make deploy.sh executable
+  file:
+    path: "{{ judge_web_deployment_path }}/deploy.sh"
+    mode: '0755'
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    state: file
+
+- name: Make deploy-remote-workers.sh executable
+  file:
+    path: "{{ judge_web_deployment_path }}/deploy-remote-workers.sh"
+    mode: '0755'
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    state: file
