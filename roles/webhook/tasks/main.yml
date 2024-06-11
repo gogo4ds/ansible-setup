@@ -1,0 +1,65 @@
+- name: Ensure apt cache is updated
+  apt:
+    update_cache: yes
+
+- name: Install webhook
+  apt:
+    name: webhook
+    state: present
+
+- name: Replace {secret} with actual secret (deployment repo needs to be checked out)
+  replace:
+    path: "{{ hooks_path }}"
+    regexp: '{secret}'
+    replace: "{{ webhook_secret }}"
+
+- name: Install supervisor
+  apt:
+    name: supervisor
+    state: present
+
+- name: Create log directory for supervisor
+  file:
+    path: "{{ supervisor_log_path | dirname }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0755'
+
+- name: Create supervisor log file
+  file:
+    path: "{{ supervisor_log_path }}"
+    state: touch
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0644'
+
+- name: Create supervisor configuration for webhooks
+  copy:
+    dest: /etc/supervisor/conf.d/webhooks.conf
+    content: |
+      [program:webhooks]
+      command=bash -c "/usr/bin/webhook -hooks {{ hooks_path }}" -ip "{{ ansible_default_ipv4.address }}" -verbose
+      redirect_stderr=true
+      autostart=true
+      autorestart=true
+      user={{ ansible_user }}
+      numprocs=1
+      process_name=%(program_name)s_%(process_num)s
+      stdout_logfile={{ supervisor_log_path }}
+      environment=HOME="/home/{{ ansible_user }}",USER="{{ ansible_user }}"
+
+- name: Reload supervisor configuration
+  command: supervisorctl reread
+
+- name: Update supervisor to apply new configuration
+  command: supervisorctl update
+
+- name: Restart webhooks in supervisor
+  command: supervisorctl restart webhooks:*
+
+- name: Allow port 9000 (default for webhooks) through UFW
+  ufw:
+    rule: allow
+    port: 9000
+    proto: tcp

@@ -20,5 +20,6 @@
     - docker
     - ufw
     - checkout_worker_deployment
+    - webhook
     - update_worker
     - deploy_worker
